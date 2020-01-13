@@ -1,17 +1,54 @@
 package utils;
 
 
-import entities.Role;
-import entities.User;
+import entities.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SetupTestUsers {
 
     public static void main(String[] args) {
 
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
+        persistRecipeEntities(emf);
+        persistUserEntities(emf);
+
+    }
+    private static void persistRecipeEntities(EntityManagerFactory emf) {
+        EntityManager em = emf.createEntityManager();
+
+        DayplanEntity dayplanEntity0 = new DayplanEntity();
+        DayplanEntity dayplanEntity1 = new DayplanEntity();
+        DayplanEntity dayplanEntity2 = new DayplanEntity();
+
+        IngredientEntity ingredientEntity0 = new IngredientEntity();
+        IngredientEntity ingredientEntity1 = new IngredientEntity();
+        IngredientEntity ingredientEntity2 = new IngredientEntity();
+
+        ItemEntity itemEntity0 = new ItemEntity();
+        ItemEntity itemEntity1 = new ItemEntity();
+        ItemEntity itemEntity2 = new ItemEntity();
+
+        MenuplanEntity menuplanEntity0 = new MenuplanEntity();
+        MenuplanEntity menuplanEntity1 = new MenuplanEntity();
+        MenuplanEntity menuplanEntity2 = new MenuplanEntity();
+
+        RecipeEntity recipeEntity0 = new RecipeEntity();
+        RecipeEntity recipeEntity1 = new RecipeEntity();
+        RecipeEntity recipeEntity2 = new RecipeEntity();
+
+        recipeEntity0.setDescription("FREDAGSMYS");
+        recipeEntity0.setIngredients("Meat 500g, 2 onions, etc");
+        recipeEntity0.setPrep("");
+        recipeEntity0.setPrep_time("20min");
+        recipeEntity0.setPreparation_steps("make the meat etc");
+
+    }
+
+    private static void persistUserEntities(EntityManagerFactory emf) {
         EntityManager em = emf.createEntityManager();
 
         // IMPORTAAAAAAAAAANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -44,7 +81,5 @@ public class SetupTestUsers {
         System.out.println("Testing user with OK password: " + user.verifyPassword("test"));
         System.out.println("Testing user with wrong password: " + user.verifyPassword("test1"));
         System.out.println("Created TEST Users");
-
     }
-
 }

@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.User;
+import facades.RecipeFacade;
 import facades.ScraperFacade;
 import utils.EMF_Creator;
 
@@ -26,7 +27,10 @@ import java.util.concurrent.TimeUnit;
 public class DemoResource {
 
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-    private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final RecipeFacade RECIPE_FACADE = RecipeFacade.getFacadeExample(EMF);
+    private static final ScraperFacade SCRAPER_FACADE = ScraperFacade.getScraperFacade(EMF);
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
 
 
     @Context
@@ -74,20 +78,20 @@ public class DemoResource {
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("luke")
-    @RolesAllowed("user")
-    public void getLuke(@Suspended final AsyncResponse ar) throws ExecutionException, InterruptedException {
-        ar.setTimeoutHandler(asyncResponse -> asyncResponse.resume(Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("You fucked up").build()));
-        ar.setTimeout(10, TimeUnit.SECONDS);
-        new Thread(() -> {
-            ScraperFacade scraperFacade = new ScraperFacade();
-            try {
-                ar.resume(GSON.toJson(scraperFacade.runParralel()));
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Path("all")
+//    @RolesAllowed("user")
+//    public void getLuke(@Suspended final AsyncResponse ar) throws ExecutionException, InterruptedException {
+//        ar.setTimeoutHandler(asyncResponse -> asyncResponse.resume(Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("You fucked up").build()));
+//        ar.setTimeout(10, TimeUnit.SECONDS);
+//        new Thread(() -> {
+//            ScraperFacade scraperFacade = new ScraperFacade();
+//            try {
+//                ar.resume(GSON.toJson(scraperFacade.runParralel()));
+//            } catch (ExecutionException | InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//    }
 }
